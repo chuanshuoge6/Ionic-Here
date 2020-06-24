@@ -219,6 +219,14 @@ export default function Here() {
                 <option value="9">terrain xbase</option>
             </select>
 
+            <form style={{ position: 'fixed', top: '10px', right: '10px', zIndex: 2 }}>
+                <input id='page1' name='page' type='radio' onClick={() => window.location.href = '/tab1'}></input>
+                <label for="page1" style={{ fontSize: '13px' }}> page 1</label><br></br>
+                <input id='page2' name='page' type='radio' onClick={() => window.location.href = '/tab2'}></input>
+                <label for="page2" style={{ fontSize: '13px' }}> page 2</label><br></br>
+                <input id='page3' name='page' type='radio' onClick={() => window.location.href = '/tab3'}></input>
+                <label for="page3" style={{ fontSize: '13px' }}> page 3</label>
+            </form>
         </div>
     );
 

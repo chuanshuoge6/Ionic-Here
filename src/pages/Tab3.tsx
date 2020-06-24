@@ -20,26 +20,13 @@ import {
   add, trash, ellipsisHorizontalOutline
 } from 'ionicons/icons';
 import { Plugins } from '@capacitor/core';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import CheckoutForm from '../components/CheckoutForm'
+import Here3 from '../components/Here3'
 
 const Tab3: React.FC = () => {
-  const buyer_publishable_key = 'pk_test_51GsgRBBMl0RuVIMsHRfU1TJP9jjjVI7QWfSO8zne0ZZ3BALqEvFix8HZiwUPatS33haCJD21eMBtvfsv79NnOopb004Tyq8Enp'
-  const stripePromise = loadStripe(buyer_publishable_key);
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Stripe Example</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent>
-        <Elements stripe={stripePromise}>
-          <CheckoutForm />
-        </Elements>
-      </IonContent>
+      <Here3 />
     </IonPage>
 
   );

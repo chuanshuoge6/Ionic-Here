@@ -2,28 +2,38 @@ ion-content ion-toolbar {
   --background: translucent;
 }
 
-.StripeElement {
-  height: 40px;
-  padding: 10px 12px;
-  width: 100%;
-  color: #32325d;
-  background-color: white;
-  border: 1px solid transparent;
-  border-radius: 4px;
-
-  box-shadow: 0 1px 3px 0 #e6ebf1;
-  -webkit-transition: box-shadow 150ms ease;
-  transition: box-shadow 150ms ease;
+.bubble {
+  font-size: 11px;
+  line-height: 15px;
+  color: white;
+}
+.bubble-image {
+  width: 300px;
+  height: 100px;
+  background-size: cover;
+  background-position: center;
+  display: block;
+}
+.bubble-logo {
+  float: left;
+  margin-right: 1em;
+  margin-bottom: 4px;
+}
+.bubble-footer {
+  display: table;
+}
+.bubble-desc {
+  display: table-cell;
+  vertical-align: middle;
+}
+.bubble a {
+  text-decoration: none;
+  color: white !important;
+}
+.bubble a:hover {
+  text-decoration: underline;
 }
 
-.StripeElement--focus {
-  box-shadow: 0 1px 3px 0 #cfd7df;
-}
-
-.StripeElement--invalid {
-  border-color: #fa755a;
-}
-
-.StripeElement--webkit-autofill {
-  background-color: #fefde5 !important;
+.bubble hr {
+  margin: 5px 0px;
 }
