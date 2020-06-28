@@ -1,43 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Plugins } from '@capacitor/core';
-import '../pages/Tab3.css';
 
-export default function Here3() {
+export default function Here4() {
     const [map, setMap] = useState(null)
     const [layer, setLayer] = useState(null)
-    const [data, setData] = useState([])
 
     const { Geolocation } = Plugins;
 
     useEffect(() => {
         getMap()
-        generateMarkers()
         setTimeout(() => {
             document.getElementById('refreshButton').click()
         }, 1000);
 
         return () => map.dispose();
     }, []);
-
-    const generateMarkers = () => {
-        const xMin = 50.84561389596551
-        const xMax = 51.21708943492305
-        const xDiff = xMax - xMin
-        const yMax = -113.80644441313935
-        const yMin = -114.36916364528605
-        const yDiff = yMax - yMin
-        const randomPositions = []
-
-        for (let i = 0; i < 1000; i++) {
-            const position = {
-                lat: Math.random() * xDiff + xMin,
-                lng: Math.random() * yDiff + yMin
-            }
-            randomPositions.push(position)
-        }
-
-        setData(randomPositions)
-    }
 
     const H = window.H;
 
@@ -54,8 +31,8 @@ export default function Here3() {
             layer ? layer : defaultLayers.raster.normal.map,
             {
                 // This map is centered over Europe
-                zoom: 10,
-                center: { lat: 51.048615, lng: -114.070847 },
+                zoom: 3,
+                center: { lat: 48.30432303555956, lng: -104.94466241321628 },
                 pixelRatio: window.devicePixelRatio || 1
             }
         );
@@ -66,96 +43,27 @@ export default function Here3() {
         // Instantiate the default behavior, providing the mapEvents object:
         const behavior = new H.mapevents.Behavior(mapEvents);
 
-        // create the default UI component, for displaying bubbles
-        var ui = H.ui.UI.createDefault(map, defaultLayers);
-
-        function startClustering(map, data) {
-            // First we need to create an array of DataPoint objects,
-            // for the ClusterProvider
-            var dataPoints = data.map(function (item, index) {
-                //datapoint ={lat, lng, attitude, data}, id is stored in point.data, 
-                //image URL can be stored in data as well
-                return new H.clustering.DataPoint(item.lat, item.lng, null, index);
-            });
-
-            // Create a clustering provider with custom options for clusterizing the input
-            var clusteredDataProvider = new H.clustering.Provider(dataPoints, {
-                clusteringOptions: {
-                    // Maximum radius of the neighbourhood
-                    eps: 32,
-                    // minimum weight of points required to form a cluster
-                    minWeight: 2
+        function renderKML() {
+            // Create a reader object passing in the URL of our KML file
+            const reader = new H.data.kml.Reader('areas.kml');
+            reader.addEventListener("statechange", function (evt) {
+                if (evt.state === H.data.AbstractReader.State.READY) {
+                    // Get KML layer from the reader object and add it to the map
+                    map.addLayer(reader.getLayer());
+                    reader.getLayer().getProvider().addEventListener("tap", (evt) => {
+                        alert(evt.target.getData().name)
+                    });
+                }
+                if (evt.state === H.data.AbstractReader.State.ERROR) {
+                    alert('KML parsing error')
                 }
             });
 
-            function reverseGeocode(location) {
-                var geocoder = platform.getGeocodingService(),
-                    reverseGeocodingParameters = {
-                        prox: location.lat.toString() + ',' + location.lng.toString(),
-                        mode: 'retrieveAddresses',
-                        maxresults: '1',
-                        jsonattributes: 1
-                    };
-
-                geocoder.reverseGeocode(
-                    reverseGeocodingParameters,
-                    reverseGeocodeSuccess,
-                    reverseGeocodeError
-                );
-            }
-
-            function reverseGeocodeSuccess(result) {
-                const address = result.response.view[0].result;
-                console.log(address)
-
-                document.getElementById('bubbleDomTextArea').innerHTML = address[0].location.address.label
-            }
-
-            function reverseGeocodeError(error) {
-                console.log(error)
-            }
-
-            // Note that we attach the event listener to the cluster provider, and not to
-            // the individual markers
-            clusteredDataProvider.addEventListener('tap', e => {
-                // Get position of the "clicked" marker
-                const position = e.target.getGeometry();
-
-                const viewportX = (e.currentPointer.viewportX - 70).toString() + 'px'
-                const viewportY = (e.currentPointer.viewportY - 160).toString() + 'px'
-
-                const bubbleId = e.target.data.a.data;
-
-                const bubbleDom = document.getElementById('bubbleDom')
-                bubbleDom.style.position = 'fixed'
-                bubbleDom.style.top = viewportY
-                bubbleDom.style.left = viewportX
-                bubbleDom.style.display = 'block'
-                bubbleDom.style.zIndex = 2
-                bubbleDom.style.backgroundColor = 'white'
-                bubbleDom.style.fontSize = '13px'
-                bubbleDom.style.width = '150px'
-
-                reverseGeocode(position)
-
-                document.getElementById('bubbleDomText').innerHTML =
-                    'ID: ' + bubbleId + '<br/>'
-                //   + 'Lat: ' + position.lat.toString() + '<br/>Lng' + position.lng.toString()
-            }
-            );
-
-
-            // Create a layer tha will consume objects from our clustering provider
-            var clusteringLayer = new H.map.layer.ObjectLayer(clusteredDataProvider);
-
-            // To make objects from clustering provder visible,
-            // we need to add our layer to the map
-            map.addLayer(clusteringLayer);
+            // Parse the document
+            reader.parse();
         }
 
-        if (data.length > 0) {
-            startClustering(map, data);
-        }
+        renderKML()
 
         setMap(map)
     }
@@ -257,19 +165,6 @@ export default function Here3() {
                 <label for="page5" style={{ fontSize: '13px' }}> search</label><br />
             </form>
 
-            <div id='bubbleDom' style={{ display: 'none' }}>
-                <span style={{ float: 'right', fontSize: '20px', cursor: 'pointer' }}
-                    onClick={() => document.getElementById('bubbleDom').style.display = 'none'}>
-                    X</span>
-
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQleYrlNGWPV7IqQspqT71rj9Ht-gFTGRku4q7anMgFqymF-qDI&usqp=CAU"
-                    style={{ marginLeft: '20px' }}
-                    alt="house for sale" width="100" height="100"></img><br />
-
-                <span id='bubbleDomText'></span>
-                <textarea id='bubbleDomTextArea' rows='2' cols='20' wrap="hard"
-                    style={{ resize: 'none', borderWidth: 0 }}></textarea>
-            </div>
         </div>
     );
 

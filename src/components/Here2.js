@@ -170,13 +170,33 @@ export default function Here2() {
                 zIndex: 2, fontSize: '13px'
             }}></span>
 
-            <form style={{ position: 'fixed', top: '10px', right: '10px', zIndex: 2 }}>
+            <button style={{ position: 'fixed', top: '10px', right: '10px', zIndex: 2 }}
+                onClick={() => {
+                    const formStyle = document.getElementById('pageForm').style
+                    if (formStyle.display === 'none') {
+                        formStyle.position = 'fixed'
+                        formStyle.top = '30px'
+                        formStyle.right = '10px'
+                        formStyle.zIndex = 2
+                        formStyle.display = 'block'
+                    }
+                    else {
+                        formStyle.display = 'none'
+                    }
+                }}>
+                <i class="fa fa-bars"></i></button>
+
+            <form id='pageForm' style={{ display: 'none' }}>
                 <input id='page1' name='page' type='radio' onClick={() => window.location.href = '/tab1'}></input>
-                <label for="page1" style={{ fontSize: '13px' }}> page 1</label><br></br>
+                <label for="page1" style={{ fontSize: '13px' }}> measure</label><br></br>
                 <input id='page2' name='page' type='radio' onClick={() => window.location.href = '/tab2'}></input>
-                <label for="page2" style={{ fontSize: '13px' }}> page 2</label><br></br>
+                <label for="page2" style={{ fontSize: '13px' }}> domMarker</label><br></br>
                 <input id='page3' name='page' type='radio' onClick={() => window.location.href = '/tab3'}></input>
-                <label for="page3" style={{ fontSize: '13px' }}> page 3</label>
+                <label for="page3" style={{ fontSize: '13px' }}> cluster</label><br />
+                <input id='page4' name='page' type='radio' onClick={() => window.location.href = '/tab4'}></input>
+                <label for="page4" style={{ fontSize: '13px' }}> kml</label><br />
+                <input id='page5' name='page' type='radio' onClick={() => window.location.href = '/tab5'}></input>
+                <label for="page5" style={{ fontSize: '13px' }}> search</label><br />
             </form>
         </div>
     );

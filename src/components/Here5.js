@@ -1,43 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Plugins } from '@capacitor/core';
-import '../pages/Tab3.css';
 
-export default function Here3() {
+export default function Here5() {
     const [map, setMap] = useState(null)
     const [layer, setLayer] = useState(null)
-    const [data, setData] = useState([])
+    const [houseNumber, setHouseNumber] = useState('')
+    const [street, setStreet] = useState('')
+    const [city, setCity] = useState('')
+    const [country, setCountry] = useState('')
 
     const { Geolocation } = Plugins;
 
     useEffect(() => {
         getMap()
-        generateMarkers()
         setTimeout(() => {
             document.getElementById('refreshButton').click()
         }, 1000);
 
         return () => map.dispose();
     }, []);
-
-    const generateMarkers = () => {
-        const xMin = 50.84561389596551
-        const xMax = 51.21708943492305
-        const xDiff = xMax - xMin
-        const yMax = -113.80644441313935
-        const yMin = -114.36916364528605
-        const yDiff = yMax - yMin
-        const randomPositions = []
-
-        for (let i = 0; i < 1000; i++) {
-            const position = {
-                lat: Math.random() * xDiff + xMin,
-                lng: Math.random() * yDiff + yMin
-            }
-            randomPositions.push(position)
-        }
-
-        setData(randomPositions)
-    }
 
     const H = window.H;
 
@@ -54,8 +35,8 @@ export default function Here3() {
             layer ? layer : defaultLayers.raster.normal.map,
             {
                 // This map is centered over Europe
-                zoom: 10,
-                center: { lat: 51.048615, lng: -114.070847 },
+                zoom: 3,
+                center: { lat: 48.30432303555956, lng: -104.94466241321628 },
                 pixelRatio: window.devicePixelRatio || 1
             }
         );
@@ -66,96 +47,69 @@ export default function Here3() {
         // Instantiate the default behavior, providing the mapEvents object:
         const behavior = new H.mapevents.Behavior(mapEvents);
 
-        // create the default UI component, for displaying bubbles
-        var ui = H.ui.UI.createDefault(map, defaultLayers);
+        function geocode() {
+            var geocoder = platform.getGeocodingService()
 
-        function startClustering(map, data) {
-            // First we need to create an array of DataPoint objects,
-            // for the ClusterProvider
-            var dataPoints = data.map(function (item, index) {
-                //datapoint ={lat, lng, attitude, data}, id is stored in point.data, 
-                //image URL can be stored in data as well
-                return new H.clustering.DataPoint(item.lat, item.lng, null, index);
-            });
+            if (country === '') { return }
 
-            // Create a clustering provider with custom options for clusterizing the input
-            var clusteredDataProvider = new H.clustering.Provider(dataPoints, {
-                clusteringOptions: {
-                    // Maximum radius of the neighbourhood
-                    eps: 32,
-                    // minimum weight of points required to form a cluster
-                    minWeight: 2
-                }
-            });
+            var geocodingParameters = {
+                housenumber: houseNumber,
+                street: street,
+                city: city,
+                country: country,
+                jsonattributes: 1
+            };
 
-            function reverseGeocode(location) {
-                var geocoder = platform.getGeocodingService(),
-                    reverseGeocodingParameters = {
-                        prox: location.lat.toString() + ',' + location.lng.toString(),
-                        mode: 'retrieveAddresses',
-                        maxresults: '1',
-                        jsonattributes: 1
-                    };
+            geocoder.geocode(
+                geocodingParameters,
+                onSuccess,
+                onError
+            );
+        }
 
-                geocoder.reverseGeocode(
-                    reverseGeocodingParameters,
-                    reverseGeocodeSuccess,
-                    reverseGeocodeError
-                );
+        function onSuccess(result) {
+            var locations = result.response.view[0].result;
+            var center = null
+
+            for (let i = 0; i < locations.length; i++) {
+
+                const svgMarkup = '<svg width="24" height="24" ' +
+                    'xmlns="http://www.w3.org/2000/svg">' +
+                    '<path d="M16.5 24.447v-0.996c3.352 0.099 5.993 1.174 5.993 2.487 0 1.379-2.906 2.56-6.492 2.56s-6.492-1.181-6.492-2.56c0-1.313 2.641-2.389 5.992-2.487v0.996c-2.799 0.069-4.993 0.71-4.993 1.491 0 0.827 2.459 1.623 5.493 1.623 3.033 0 5.492-0.796 5.492-1.623-0.001-0.781-2.194-1.421-4.993-1.491zM10.516 8.995c0-3.033 2.521-5.493 5.556-5.493 3.034 0 5.493 2.46 5.493 5.493 0 2.607-1.818 4.786-4.256 5.348l-1.309 13.219-1.313-13.256c-2.362-0.615-4.171-2.756-4.171-5.311zM16 7.524c0-0.828-0.671-1.498-1.498-1.498s-1.499 0.67-1.499 1.498c0 0.827 0.671 1.498 1.499 1.498s1.498-0.67 1.498-1.498z"></path>' +
+                    '<text x="6" y="18" font-size="12pt" font-family="Arial" font-weight="bold" ' +
+                    'text-anchor="middle" fill="black">${markerText}</text>' +
+                    '</svg>';
+
+                const icon = new H.map.Icon(svgMarkup.replace('${markerText}', i + 1))
+                const position = locations[i].location.displayPosition
+                console.log(position)
+
+                const coord = { lat: position.latitude, lng: position.longitude }
+                if (i === 0) { center = coord }
+
+                const marker = new H.map.Marker(coord, { icon: icon })
+                map.addObject(marker);
             }
 
-            function reverseGeocodeSuccess(result) {
-                const address = result.response.view[0].result;
-                console.log(address)
-
-                document.getElementById('bubbleDomTextArea').innerHTML = address[0].location.address.label
-            }
-
-            function reverseGeocodeError(error) {
-                console.log(error)
-            }
-
-            // Note that we attach the event listener to the cluster provider, and not to
-            // the individual markers
-            clusteredDataProvider.addEventListener('tap', e => {
-                // Get position of the "clicked" marker
-                const position = e.target.getGeometry();
-
-                const viewportX = (e.currentPointer.viewportX - 70).toString() + 'px'
-                const viewportY = (e.currentPointer.viewportY - 160).toString() + 'px'
-
-                const bubbleId = e.target.data.a.data;
-
-                const bubbleDom = document.getElementById('bubbleDom')
-                bubbleDom.style.position = 'fixed'
-                bubbleDom.style.top = viewportY
-                bubbleDom.style.left = viewportX
-                bubbleDom.style.display = 'block'
-                bubbleDom.style.zIndex = 2
-                bubbleDom.style.backgroundColor = 'white'
-                bubbleDom.style.fontSize = '13px'
-                bubbleDom.style.width = '150px'
-
-                reverseGeocode(position)
-
-                document.getElementById('bubbleDomText').innerHTML =
-                    'ID: ' + bubbleId + '<br/>'
-                //   + 'Lat: ' + position.lat.toString() + '<br/>Lng' + position.lng.toString()
-            }
+            //zoom into 1st location found
+            //create boundary
+            var CircleBoundary = new H.map.Circle(
+                new H.geo.Point(center.lat, center.lng), //center
+                11703, // Radius 
+                { style: { fillColor: 'rgba(0, 0, 0, 0)' } }
             );
 
-
-            // Create a layer tha will consume objects from our clustering provider
-            var clusteringLayer = new H.map.layer.ObjectLayer(clusteredDataProvider);
-
-            // To make objects from clustering provder visible,
-            // we need to add our layer to the map
-            map.addLayer(clusteringLayer);
+            map.getViewModel().setLookAtData({
+                zoom: 15,
+                bounds: CircleBoundary.getBoundingBox()
+            });
         }
 
-        if (data.length > 0) {
-            startClustering(map, data);
+        function onError(error) {
+            alert('Can\'t reach the remote server');
         }
+
+        geocode()
 
         setMap(map)
     }
@@ -257,19 +211,47 @@ export default function Here3() {
                 <label for="page5" style={{ fontSize: '13px' }}> search</label><br />
             </form>
 
-            <div id='bubbleDom' style={{ display: 'none' }}>
-                <span style={{ float: 'right', fontSize: '20px', cursor: 'pointer' }}
-                    onClick={() => document.getElementById('bubbleDom').style.display = 'none'}>
-                    X</span>
+            <button onClick={() => {
+                const searchFormStyle = document.getElementById('searchForm').style
+                if (searchFormStyle.display === 'none') {
+                    searchFormStyle.display = 'block'
+                    searchFormStyle.position = 'fixed'
+                    searchFormStyle.top = '60px'
+                    searchFormStyle.left = '10px'
+                    searchFormStyle.zIndex = 2
+                }
+                else {
+                    searchFormStyle.display = 'none'
+                }
+            }}
+                style={{
+                    position: 'fixed', top: '40px', left: '10px', zIndex: 2,
+                    border: '2px solid green'
+                }}
+            >search address</button>
 
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQleYrlNGWPV7IqQspqT71rj9Ht-gFTGRku4q7anMgFqymF-qDI&usqp=CAU"
-                    style={{ marginLeft: '20px' }}
-                    alt="house for sale" width="100" height="100"></img><br />
+            <form id='searchForm' style={{ display: 'none' }} onSubmit={e => e.preventDefault()}>
+                <input id='houseNumber' placeholder='house #' style={{ width: '150px' }}
+                    onChange={e => { setHouseNumber(e.target.value); }}>
+                </input><br />
+                <input id='street' placeholder='street' style={{ width: '150px' }}
+                    onChange={e => setStreet(e.target.value)}>
+                </input><br />
+                <input id='city' placeholder='city' style={{ width: '150px' }}
+                    onChange={e => setCity(e.target.value)}>
+                </input><br />
+                <input id='country' placeholder='country' style={{ width: '150px' }}
+                    onChange={e => setCountry(e.target.value)}></input><br />
+                <button style={{ border: '2px solid green' }}
+                    onClick={() => {
+                        document.getElementById('refreshButton').click();
+                        setTimeout(() => {
+                            document.getElementById('refreshButton').click();
+                        }, 1000);
+                    }}>
+                    submit</button>
+            </form>
 
-                <span id='bubbleDomText'></span>
-                <textarea id='bubbleDomTextArea' rows='2' cols='20' wrap="hard"
-                    style={{ resize: 'none', borderWidth: 0 }}></textarea>
-            </div>
         </div>
     );
 
