@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plugins } from '@capacitor/core';
+import PageForm from './PageForm'
 
 export default function Here2() {
     const [map, setMap] = useState(null)
@@ -186,18 +187,7 @@ export default function Here2() {
                 }}>
                 <i class="fa fa-bars"></i></button>
 
-            <form id='pageForm' style={{ display: 'none' }}>
-                <input id='page1' name='page' type='radio' onClick={() => window.location.href = '/tab1'}></input>
-                <label for="page1" style={{ fontSize: '13px' }}> measure</label><br></br>
-                <input id='page2' name='page' type='radio' onClick={() => window.location.href = '/tab2'}></input>
-                <label for="page2" style={{ fontSize: '13px' }}> domMarker</label><br></br>
-                <input id='page3' name='page' type='radio' onClick={() => window.location.href = '/tab3'}></input>
-                <label for="page3" style={{ fontSize: '13px' }}> cluster</label><br />
-                <input id='page4' name='page' type='radio' onClick={() => window.location.href = '/tab4'}></input>
-                <label for="page4" style={{ fontSize: '13px' }}> kml</label><br />
-                <input id='page5' name='page' type='radio' onClick={() => window.location.href = '/tab5'}></input>
-                <label for="page5" style={{ fontSize: '13px' }}> search</label><br />
-            </form>
+            <PageForm />
         </div>
     );
 

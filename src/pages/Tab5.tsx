@@ -22,7 +22,7 @@ import {
 import { Plugins } from '@capacitor/core';
 import Here5 from '../components/Here5'
 
-const Tab4: React.FC = () => {
+const Tab5: React.FC = () => {
 
     return (
         <IonPage>
@@ -31,4 +31,4 @@ const Tab4: React.FC = () => {
     )
 }
 
-export default Tab4;
+export default Tab5;
