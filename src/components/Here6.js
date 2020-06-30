@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PageForm from './PageForm'
-import { star } from 'ionicons/icons';
+import axios from 'axios';
 
 export default function Here6() {
     const [map, setMap] = useState(null)
     const [layer, setLayer] = useState(null)
+    const [optimizeWayPoint, setOptimizeWayPoint] = useState(true)
 
     useEffect(() => {
         getMap()
@@ -99,9 +100,6 @@ export default function Here6() {
             const objects = map.getObjects()
             if (objects.length === 0) { return }
 
-            //const start = objects[0].b
-            //const stop1 = objects[1].b
-            console.log(objects.length)
             var router = platform.getRoutingService(),
                 routeRequestParams = {
                     mode: 'fastest;car',
@@ -113,23 +111,61 @@ export default function Here6() {
                     //waypoint2: coords.lat + ',' + coords.lng  // destination
                 };
 
-            //start and stop on the way
-            let i = 0
-            for (; i < objects.length; i++) {
-                const wayPoint = objects[i].b
-                routeRequestParams['waypoint' + i.toString()] = wayPoint.lat + ',' + wayPoint.lng
+            if (document.getElementById('optimizeWayPointCheckBox').checked) {
+                //reorder waypoint order first, then route
+                let webString = 'https://wse.ls.hereapi.com/2/findsequence.json?start=start;'
+                    + objects[0].b.lat + ',' + objects[0].b.lng + '&'
+                let j = 1
+                for (; j < objects.length; j++) {
+                    const wayPoint = objects[j].b
+                    webString = webString + 'destination' + j.toString() + '=stop' + j.toString() + ';' + wayPoint.lat + ',' + wayPoint.lng + '&'
+                }
+
+                webString = webString + 'end=' + 'destination' + ';' + coords.lat + ',' + coords.lng + '&'
+                    + 'mode=fastest;car&'
+                    + 'apiKey=' + 'JNIn_O9OQdca51JT5ofoou0WOKdp69bNG-XxHaHqPLo'
+
+                //console.log(webString)
+                axios.get(webString)
+                    .then(function (response) {
+                        // handle success
+                        const orderedWayPoint = response.data.results[0].waypoints
+                        console.log(orderedWayPoint);
+                        for (let i = 0; i < orderedWayPoint.length; i++) {
+                            routeRequestParams['waypoint' + i.toString()] = orderedWayPoint[i].lat + ',' + orderedWayPoint[i].lng
+                        }
+
+                        router.calculateRoute(
+                            routeRequestParams,
+                            onSuccess,
+                            onError
+                        );
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                    })
             }
+            else {
+                //route waypoint in sequence without optimization
+                //start and stop on the way
+                let i = 0
+                for (; i < objects.length; i++) {
+                    const wayPoint = objects[i].b
+                    routeRequestParams['waypoint' + i.toString()] = wayPoint.lat + ',' + wayPoint.lng
+                }
 
-            //destination
-            routeRequestParams['waypoint' + i.toString()] = coords.lat + ',' + coords.lng
+                //destination
+                routeRequestParams['waypoint' + i.toString()] = coords.lat + ',' + coords.lng
 
-            //console.log(routeRequestParams)
+                //console.log(routeRequestParams)
 
-            router.calculateRoute(
-                routeRequestParams,
-                onSuccess,
-                onError
-            );
+                router.calculateRoute(
+                    routeRequestParams,
+                    onSuccess,
+                    onError
+                );
+            }
         }
 
         function onSuccess(result) {
@@ -241,6 +277,7 @@ export default function Here6() {
                         formStyle.right = '10px'
                         formStyle.zIndex = 2
                         formStyle.display = 'block'
+                        formStyle.backgroundColor = 'white'
                     }
                     else {
                         formStyle.display = 'none'
@@ -249,6 +286,14 @@ export default function Here6() {
                 <i class="fa fa-bars"></i></button>
 
             <PageForm />
+
+            <form style={{
+                position: 'fixed', top: '40px', left: '10px', zIndex: 2,
+                backgroundColor: 'white', fontSize: '13px', color: 'red'
+            }}>
+                <input type="checkbox" id="optimizeWayPointCheckBox" name="checkbox1"></input>
+                <label for="checkbox1"><i> optimize route</i></label>
+            </form>
         </div>
     );
 

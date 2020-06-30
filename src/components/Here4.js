@@ -146,6 +146,7 @@ export default function Here4() {
                         formStyle.right = '10px'
                         formStyle.zIndex = 2
                         formStyle.display = 'block'
+                        formStyle.backgroundColor = 'white'
                     }
                     else {
                         formStyle.display = 'none'

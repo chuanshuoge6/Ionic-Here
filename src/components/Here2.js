@@ -180,6 +180,7 @@ export default function Here2() {
                         formStyle.right = '10px'
                         formStyle.zIndex = 2
                         formStyle.display = 'block'
+                        formStyle.backgroundColor = 'white'
                     }
                     else {
                         formStyle.display = 'none'
