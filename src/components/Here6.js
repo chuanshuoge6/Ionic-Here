@@ -130,7 +130,7 @@ export default function Here6() {
                     .then(function (response) {
                         // handle success
                         const orderedWayPoint = response.data.results[0].waypoints
-                        console.log(orderedWayPoint);
+                        //console.log(orderedWayPoint);
                         for (let i = 0; i < orderedWayPoint.length; i++) {
                             routeRequestParams['waypoint' + i.toString()] = orderedWayPoint[i].lat + ',' + orderedWayPoint[i].lng
                         }

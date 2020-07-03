@@ -16,6 +16,10 @@ export default function PageForm() {
             <label for="page5" style={{ fontSize: '13px' }}> search</label><br />
             <input id='page6' name='page' type='radio' onClick={() => window.location.href = '/tab6'}></input>
             <label for="page6" style={{ fontSize: '13px' }}> route</label><br />
+            <input id='page7' name='page' type='radio' onClick={() => window.location.href = '/tab7'}></input>
+            <label for="page7" style={{ fontSize: '13px' }}> geofence</label><br />
+            <input id='page8' name='page' type='radio' onClick={() => window.location.href = '/tab8'}></input>
+            <label for="page8" style={{ fontSize: '13px' }}> area</label><br />
         </form>
     );
 }
