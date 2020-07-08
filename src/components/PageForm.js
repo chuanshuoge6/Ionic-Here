@@ -20,6 +20,10 @@ export default function PageForm() {
             <label for="page7" style={{ fontSize: '13px' }}> geofence</label><br />
             <input id='page8' name='page' type='radio' onClick={() => window.location.href = '/tab8'}></input>
             <label for="page8" style={{ fontSize: '13px' }}> area</label><br />
+            <input id='page9' name='page' type='radio' onClick={() => window.location.href = '/tab9'}></input>
+            <label for="page9" style={{ fontSize: '13px' }}> timezone</label><br />
+            <input id='page10' name='page' type='radio' onClick={() => window.location.href = '/tab10'}></input>
+            <label for="page10" style={{ fontSize: '13px' }}> elevation</label><br />
         </form>
     );
 }
