@@ -261,6 +261,15 @@ export default function Here3() {
                 <textarea id='bubbleDomTextArea' rows='2' cols='20' wrap="hard"
                     style={{ resize: 'none', borderWidth: 0 }}></textarea>
             </div>
+
+            <button style={{
+                position: 'fixed', top: '10px', left: '50%', zIndex: 2,
+                transform: 'translateX(-50%)', backgroundColor: '#F8C471',
+                height: '50px', width: '50px', borderRadius: '25px',
+                fontSize: '20px',
+            }}
+                onClick={() => alert('zoom in to see individual marker\ntap on marker to see address\nrefresh to randomly generate markers')}
+            >Tip</button>
         </div>
     );
 

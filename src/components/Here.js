@@ -238,6 +238,15 @@ export default function Here() {
                 <i class="fa fa-bars"></i></button>
 
             <PageForm />
+
+            <button style={{
+                position: 'fixed', top: '10px', left: '50%', zIndex: 2,
+                transform: 'translateX(-50%)', backgroundColor: '#F8C471',
+                height: '50px', width: '50px', borderRadius: '25px',
+                fontSize: '20px',
+            }}
+                onClick={() => alert('long press to add a marker\nmultiple markers can be added\ntap to find distance to nearest marker')}
+            >Tip</button>
         </div>
     );
 

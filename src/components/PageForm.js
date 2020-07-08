@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 export default function PageForm() {
 
     return (
-        <form id='pageForm' style={{ display: 'none' }}>
+        <form id='pageForm' style={{ position: 'fixed', top: '30px', right: '10px', zIndex: 2, backgroundColor: 'white' }}>
             <input id='page1' name='page' type='radio' onClick={() => window.location.href = '/tab1'}></input>
             <label for="page1" style={{ fontSize: '13px' }}> measure</label><br></br>
             <input id='page2' name='page' type='radio' onClick={() => window.location.href = '/tab2'}></input>

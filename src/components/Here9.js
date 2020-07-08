@@ -177,6 +177,15 @@ export default function Here() {
                 UTC Offset: <i style={{ color: 'red' }} id='utcOffset'></i><br />
                 Local Time: <i style={{ color: 'red' }} id='localtime'></i><br />
             </div>
+
+            <button style={{
+                position: 'fixed', top: '10px', left: '50%', zIndex: 2,
+                transform: 'translateX(-50%)', backgroundColor: '#F8C471',
+                height: '50px', width: '50px', borderRadius: '25px',
+                fontSize: '20px',
+            }}
+                onClick={() => alert('Tap to get timezone')}
+            >Tip</button>
         </div>
     );
 

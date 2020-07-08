@@ -294,6 +294,15 @@ export default function Here6() {
                 <input type="checkbox" id="optimizeWayPointCheckBox" name="checkbox1"></input>
                 <label for="checkbox1"><i> optimize route</i></label>
             </form>
+
+            <button style={{
+                position: 'fixed', top: '10px', left: '50%', zIndex: 2,
+                transform: 'translateX(-50%)', backgroundColor: '#F8C471',
+                height: '50px', width: '50px', borderRadius: '25px',
+                fontSize: '20px',
+            }}
+                onClick={() => alert('long press to add start and way points\ntap to add destination\ncheck optimize route to find fastest route')}
+            >Tip</button>
         </div>
     );
 

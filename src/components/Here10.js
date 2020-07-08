@@ -173,6 +173,15 @@ export default function Here() {
             <div style={{ position: 'fixed', top: '40px', left: '10px', zIndex: 2, backgroundColor: 'white' }}>
                 Elevation: <i style={{ color: 'red' }} id='elevation'></i> m<br />
             </div>
+
+            <button style={{
+                position: 'fixed', top: '10px', left: '50%', zIndex: 2,
+                transform: 'translateX(-50%)', backgroundColor: '#F8C471',
+                height: '50px', width: '50px', borderRadius: '25px',
+                fontSize: '20px',
+            }}
+                onClick={() => alert('Tap to get elevation')}
+            >Tip</button>
         </div>
     );
 

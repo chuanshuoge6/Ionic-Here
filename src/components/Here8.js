@@ -263,6 +263,15 @@ export default function Here() {
                 }}>
                 <i class="fa fa-minus"></i>
             </button>
+
+            <button style={{
+                position: 'fixed', top: '10px', left: '50%', zIndex: 2,
+                transform: 'translateX(-50%)', backgroundColor: '#F8C471',
+                height: '50px', width: '50px', borderRadius: '25px',
+                fontSize: '20px',
+            }}
+                onClick={() => alert('long press to add vertex\n\double tap to remove vertex\n\marea is calculate if there are 3 or more vertex')}
+            >Tip</button>
         </div>
     );
 

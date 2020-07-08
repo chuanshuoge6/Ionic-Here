@@ -283,6 +283,15 @@ export default function Here() {
             <div style={{ position: 'fixed', top: '40px', left: '10px', zIndex: 2, backgroundColor: 'white' }}>
                 Point is <i style={{ color: 'red' }} id='geoFenceResult'></i> GeoFence
             </div>
+
+            <button style={{
+                position: 'fixed', top: '10px', left: '50%', zIndex: 2,
+                transform: 'translateX(-50%)', backgroundColor: '#F8C471',
+                height: '50px', width: '50px', borderRadius: '25px',
+                fontSize: '20px',
+            }}
+                onClick={() => alert('long press to add vertex\nneed 3 vertex to form an area\ntap to see if location is insdie geofence')}
+            >Tip</button>
         </div>
     );
 

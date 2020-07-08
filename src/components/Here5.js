@@ -243,6 +243,14 @@ export default function Here5() {
                     submit</button>
             </form>
 
+            <button style={{
+                position: 'fixed', top: '10px', left: '50%', zIndex: 2,
+                transform: 'translateX(-50%)', backgroundColor: '#F8C471',
+                height: '50px', width: '50px', borderRadius: '25px',
+                fontSize: '20px',
+            }}
+                onClick={() => alert('click search button to start\ncountry is required')}
+            >Tip</button>
         </div>
     );
 

@@ -83,7 +83,7 @@ export default function Here2() {
                                 console.log(gps)
 
                                 const heading = gps.heading ? parseInt(gps.heading) - 45 : -45
-                                document.getElementById('headingDom').innerHTML = 'Heading: ' + heading.toString()
+                                document.getElementById('headingDom').innerHTML = 'Heading: ' + parseInt(gps.heading).toString()
 
                                 clonedContent.style.transform = 'rotate(' + (heading) + 'deg)';
                             })
@@ -189,6 +189,15 @@ export default function Here2() {
                 <i class="fa fa-bars"></i></button>
 
             <PageForm />
+
+            <button style={{
+                position: 'fixed', top: '10px', left: '50%', zIndex: 2,
+                transform: 'translateX(-50%)', backgroundColor: '#F8C471',
+                height: '50px', width: '50px', borderRadius: '25px',
+                fontSize: '20px',
+            }}
+                onClick={() => alert('if device gps direction sensor is enabled\nmarker will rotate ')}
+            >Tip</button>
         </div>
     );
 
